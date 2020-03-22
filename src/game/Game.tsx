@@ -5,10 +5,10 @@ import * as actions from './actions/gameActions';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from './components/Button';
 enum CellStatus {
-  Alive,
-  Dead,
-  Growing,
-  Dying,
+  Dead = 0,
+  Alive = 1,
+  Growing = 2,
+  Dying = 3,
 }
 
 const GameBoard = styled.div`
@@ -34,7 +34,15 @@ const renderGrid = (grid: number[][]) => {
           <Cell
             id={`${grid.indexOf(row)},${cellId++}`}
             key={`${grid.indexOf(row)},${cellId}`}
-            cellStatus={cell === 1 ? CellStatus.Alive : CellStatus.Dead}
+            cellStatus={
+              cell === 0
+                ? CellStatus.Dead
+                : cell === 1
+                ? CellStatus.Alive
+                : cell === 2
+                ? CellStatus.Growing
+                : CellStatus.Dying
+            }
           />
         );
       })}

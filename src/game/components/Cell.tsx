@@ -16,7 +16,14 @@ type CellProps = {
 };
 
 export const StyledCell = styled.button<CellProps>`
-  background-color: ${props => (props.cellStatus === CellStatus.Alive ? `pink` : `violet`)};
+  background-color: ${props =>
+    props.cellStatus === CellStatus.Alive
+      ? `violet`
+      : props.cellStatus === CellStatus.Growing
+      ? `pink`
+      : props.cellStatus === CellStatus.Dying
+      ? 'brown'
+      : 'light-grey'};
   flex-grow: 1;
   border: 1px solid lightgrey;
 `;
