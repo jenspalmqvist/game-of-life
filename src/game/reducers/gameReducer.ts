@@ -14,9 +14,31 @@ const setInitialGrid = (state: any) => {
     }
     aliveCells += grid[row].reduce((a, b) => a + b);
   }
-  return { ...state, grid, aliveCells };
+  const newGrid = setGrowingOrDying(grid);
+  return { ...state, grid: newGrid, aliveCells };
 };
 
+const setGrowingOrDying = (grid: number[][]) => {
+  const newGrid: number[][] = grid.map(row => row.slice());
+  for (let row = 0; row < grid.length; row++) {
+    for (let cell = 0; cell < grid.length; cell++) {
+      const aliveNeighbours = calculateNeighbours(grid, row, cell);
+      switch (grid[row][cell]) {
+        case 0:
+          aliveNeighbours === 3 ? (newGrid[row][cell] = 2) : (newGrid[row][cell] = grid[row][cell]);
+          break;
+        case 1:
+          aliveNeighbours < 2 || aliveNeighbours > 3
+            ? (newGrid[row][cell] = 3)
+            : (newGrid[row][cell] = grid[row][cell]);
+          break;
+        default:
+          throw new Error('what happened?');
+      }
+    }
+  }
+  return newGrid;
+};
 const updateCell = (state: any, id: string) => {
   const row: number = Number(id.split(',')[0]);
   const cell: number = Number(id.split(',')[1]);
@@ -35,25 +57,32 @@ const nextGeneration = (state: any) => {
   const clonedState = { ...state };
   const previousGenerations = clonedState.generations;
   const oldGrid: number[][] = state.grid.map((row: []) => row.slice());
-  const newGrid: number[][] = state.grid.map((row: []) => row.slice());
+  let newGrid: number[][] = state.grid.map((row: []) => row.slice());
   previousGenerations.push(oldGrid);
   for (let row = 0; row < oldGrid.length; row++) {
     for (let cell = 0; cell < oldGrid.length; cell++) {
       const aliveNeighbours = calculateNeighbours(oldGrid, row, cell);
       switch (oldGrid[row][cell]) {
+        case 0:
+          aliveNeighbours === 3 ? (newGrid[row][cell] = 1) : (newGrid[row][cell] = oldGrid[row][cell]);
+          break;
         case 1:
           aliveNeighbours < 2 || aliveNeighbours > 3
             ? (newGrid[row][cell] = 0)
             : (newGrid[row][cell] = oldGrid[row][cell]);
           break;
-        case 0:
-          aliveNeighbours === 3 ? (newGrid[row][cell] = 1) : (newGrid[row][cell] = oldGrid[row][cell]);
+        case 2:
+          newGrid[row][cell] = 1;
+          break;
+        case 3:
+          newGrid[row][cell] = 0;
           break;
         default:
           throw new Error('what happened?');
       }
     }
   }
+  newGrid = setGrowingOrDying(newGrid);
   const aliveCells = newGrid.flat().reduce((a, b) => a + b);
   return { ...state, grid: newGrid, generations: previousGenerations, aliveCells, numberOfGenerations };
 };

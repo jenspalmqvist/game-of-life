@@ -6,8 +6,8 @@ import * as actions from '../actions/gameActions';
 enum CellStatus {
   Dead,
   Alive,
-  Dying,
   Growing,
+  Dying,
 }
 
 type CellProps = {
