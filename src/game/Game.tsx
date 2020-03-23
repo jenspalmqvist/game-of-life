@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cell from './components/Cell';
 import * as actions from './actions/gameActions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -63,15 +63,32 @@ export const Game = () => {
   const dispatch = useDispatch();
   const grid = useSelector((state: any) => state.game.grid);
   const aliveCells = useSelector((state: any) => state.game.aliveCells);
+  const currentGeneration = useSelector((state: any) => state.game.currentGeneration);
+  const numberOfGenerations = useSelector((state: any) => state.game.numberOfGenerations);
+  const [isRunning, setIsRunning] = useState(false);
   useEffect(() => {
     if (grid.length === 1) {
       dispatch(actions.getInitialGrid());
     }
+    setTimeout(() => isRunning === true && dispatch(actions.startGame()), 200);
   }, [grid]);
   return (
     <GameBoard>
+      <button onClick={() => dispatch(actions.changeCurrentGrid(-5))}>{'<<'}</button>
+      <button onClick={() => dispatch(actions.changeCurrentGrid(-1))}>{'<'}</button>
+      Generation{`${currentGeneration}/${numberOfGenerations}`}
+      <button onClick={() => dispatch(actions.changeCurrentGrid(1))}>{'>'}</button>
+      <button onClick={() => dispatch(actions.changeCurrentGrid(5))}>{'>>'}</button>
       {renderGrid(grid, aliveCells)}
-      <button onClick={() => dispatch(actions.startGame())}>Next generation</button>
+      <button
+        onClick={() => {
+          setIsRunning(true);
+          dispatch(actions.startGame());
+        }}
+      >
+        Start Game
+      </button>
+      <button onClick={() => setIsRunning(false)}>Pause Game</button>
     </GameBoard>
   );
 };

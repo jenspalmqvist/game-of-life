@@ -21,3 +21,8 @@ export const startGame = () => ({
 export const showGrowing = () => ({
   type: actions.SHOW_GROWING,
 });
+
+export const changeCurrentGrid = (change: number) => ({
+  type: actions.CHANGE_CURRENT_GRID,
+  change,
+});
