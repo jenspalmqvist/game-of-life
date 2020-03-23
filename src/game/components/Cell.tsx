@@ -18,7 +18,6 @@ type CellProps = {
 
 export const StyledCell = styled.button<CellProps>`
   background-color: ${props => props.color};
-  flex-grow: 1;
   border: 1px solid lightgrey;
 `;
 

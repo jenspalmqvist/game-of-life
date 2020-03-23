@@ -19,7 +19,7 @@ const changeCurrentGrid = (state: any, action: any) => {
 
 const setInitialGrid = (state: any) => {
   let aliveCells = 0;
-  const gridSize = 40;
+  const gridSize = 24;
   const grid: number[][] = [[]];
   for (let row = 0; row < gridSize; row++) {
     grid[row] = [];
@@ -86,7 +86,12 @@ const nextGeneration = (state: any) => {
     const previousGenerations = clonedState.generations;
     const oldGrid: number[][] = state.grid.map((row: []) => row.slice());
     let newGrid: number[][] = state.grid.map((row: []) => row.slice());
-    previousGenerations.push(oldGrid);
+    if (previousGenerations.length > 200) {
+      previousGenerations.shift();
+      previousGenerations.push(oldGrid);
+    } else {
+      previousGenerations.push(oldGrid);
+    }
     for (let row = 0; row < oldGrid.length; row++) {
       for (let cell = 0; cell < oldGrid.length; cell++) {
         const aliveNeighbours = calculateNeighbours(oldGrid, row, cell);

@@ -1,3 +1,7 @@
 {
-    "plugins": ["babel-plugin-macros", "macros"]
+  "plugins": [
+    "babel-plugin-macros",
+    "macros",
+    ["import", { "libraryName": "antd", "libraryDirectory": "", "style": "css" }]
+  ]
 }

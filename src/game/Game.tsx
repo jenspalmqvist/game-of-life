@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import Cell from './components/Cell';
 import * as actions from './actions/gameActions';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from './components/Button';
 enum CellStatus {
   Dead = 0,
   Alive = 1,
@@ -11,16 +10,26 @@ enum CellStatus {
   Dying = 3,
 }
 
+const GameWrapper = styled.div`
+  display: grid;
+  align: center;
+  max-width: 420px;
+  margin: auto;
+`;
 const GameBoard = styled.div`
-  display: inline-block;
-  width: 800px;
+  display: grid;
 `;
 
 const GridRow = styled.div`
+  align: center;
   display: flex;
   height: 20px;
 `;
 
+const ButtonWrapper = styled.div`
+  align: center;
+  display: flex;
+`;
 let cellId = 0;
 
 const renderGrid = (grid: number[][], aliveCells: number) => {
@@ -73,22 +82,26 @@ export const Game = () => {
     setTimeout(() => isRunning === true && dispatch(actions.startGame()), 200);
   }, [grid]);
   return (
-    <GameBoard>
-      <button onClick={() => dispatch(actions.changeCurrentGrid(-5))}>{'<<'}</button>
-      <button onClick={() => dispatch(actions.changeCurrentGrid(-1))}>{'<'}</button>
-      Generation{`${currentGeneration}/${numberOfGenerations}`}
-      <button onClick={() => dispatch(actions.changeCurrentGrid(1))}>{'>'}</button>
-      <button onClick={() => dispatch(actions.changeCurrentGrid(5))}>{'>>'}</button>
-      {renderGrid(grid, aliveCells)}
-      <button
-        onClick={() => {
-          setIsRunning(true);
-          dispatch(actions.startGame());
-        }}
-      >
-        Start Game
-      </button>
-      <button onClick={() => setIsRunning(false)}>Pause Game</button>
-    </GameBoard>
+    <GameWrapper>
+      <ButtonWrapper>
+        <button onClick={() => dispatch(actions.changeCurrentGrid(-5))}>{'<<'}</button>
+        <button onClick={() => dispatch(actions.changeCurrentGrid(-1))}>{'<'}</button>
+        Generation{`${currentGeneration}/${numberOfGenerations}`}
+        <button onClick={() => dispatch(actions.changeCurrentGrid(1))}>{'>'}</button>
+        <button onClick={() => dispatch(actions.changeCurrentGrid(5))}>{'>>'}</button>
+      </ButtonWrapper>
+      <GameBoard>{renderGrid(grid, aliveCells)}</GameBoard>
+      <ButtonWrapper>
+        <button
+          onClick={() => {
+            setIsRunning(true);
+            dispatch(actions.startGame());
+          }}
+        >
+          Start Game
+        </button>
+        <button onClick={() => setIsRunning(false)}>Pause Game</button>
+      </ButtonWrapper>
+    </GameWrapper>
   );
 };
