@@ -45,12 +45,12 @@ const renderGrid = (grid: number[][], aliveCells: number) => {
             }
             color={
               cell === 0
-                ? 'eggshell'
+                ? 'white'
                 : cell === 1
-                ? `rgb(255,${50 + aliveCells * 4},${50 + aliveCells * 4})`
+                ? `hsl(${200 + aliveCells * 10}, 100%, 79%)`
                 : cell === 2
-                ? `rgb(255,${100 + aliveCells * 3},${100 + aliveCells * 3})`
-                : 'brown'
+                ? `hsl(${200 + aliveCells * 10}, 100%, 74%)`
+                : `hsl(${200 + aliveCells * 10}, 100%, 92%)`
             }
           />
         );

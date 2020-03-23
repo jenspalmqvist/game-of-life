@@ -15,6 +15,7 @@ const setInitialGrid = (state: any) => {
     aliveCells += grid[row].reduce((a, b) => a + b);
   }
   aliveCells = (aliveCells / (gridSize * gridSize)) * 100;
+  aliveCells = aliveCells > 15 ? 15 : aliveCells;
   const newGrid = setGrowingOrDying(grid);
   return { ...state, grid: newGrid, aliveCells };
 };
@@ -95,6 +96,7 @@ const nextGeneration = (state: any) => {
   newGrid = setGrowingOrDying(newGrid);
   let aliveCells = newGrid.flat().reduce((a, b) => (b === 1 ? a + 1 : a + 0));
   aliveCells = (aliveCells / (newGrid.length * newGrid.length)) * 100;
+  aliveCells = aliveCells > 15 ? 15 : aliveCells;
   return { ...state, grid: newGrid, generations: previousGenerations, aliveCells, numberOfGenerations };
 };
 
