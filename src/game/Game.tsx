@@ -72,7 +72,6 @@ export const Game = () => {
     <GameBoard>
       {renderGrid(grid, aliveCells)}
       <button onClick={() => dispatch(actions.startGame())}>Next generation</button>
-      <button onClick={() => dispatch(actions.showGrowing())}>Show growing or dying</button>
     </GameBoard>
   );
 };
