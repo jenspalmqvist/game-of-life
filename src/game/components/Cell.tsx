@@ -23,25 +23,7 @@ export const StyledCell = styled.button<CellProps>`
 
 const Cell = ({ id, cellStatus, color }: CellProps) => {
   const dispatch = useDispatch();
-  const switchState = () => {
-    switch (cellStatus) {
-      case CellStatus.Alive:
-        status = CellStatus.Dead;
-        break;
-      case CellStatus.Dead:
-        status = CellStatus.Alive;
-        break;
-      case CellStatus.Growing:
-        status = CellStatus.Growing;
-        break;
-      case CellStatus.Dying:
-        status = CellStatus.Dying;
-        break;
-      default:
-        return cellStatus;
-    }
-  };
-  let status = cellStatus;
+  const status = cellStatus;
   return <StyledCell id={id} cellStatus={status} onClick={() => dispatch(actions.updateCell(id))} color={color} />;
 };
 

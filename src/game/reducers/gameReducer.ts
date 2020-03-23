@@ -97,13 +97,9 @@ const nextGeneration = (state: any) => {
         const aliveNeighbours = calculateNeighbours(oldGrid, row, cell);
         switch (oldGrid[row][cell]) {
           case 0:
-            // aliveNeighbours === 3 ? (newGrid[row][cell] = 1) : (newGrid[row][cell] = oldGrid[row][cell]);
             newGrid[row][cell] = oldGrid[row][cell];
             break;
           case 1:
-            // aliveNeighbours < 2 || aliveNeighbours > 3
-            //   ? (newGrid[row][cell] = 0)
-            //   : (newGrid[row][cell] = oldGrid[row][cell]);
             newGrid[row][cell] = oldGrid[row][cell];
             break;
           case 2:
