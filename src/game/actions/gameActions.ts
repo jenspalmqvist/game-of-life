@@ -17,3 +17,7 @@ export const updateCell = (id: string) => ({
 export const startGame = () => ({
   type: actions.START_GAME,
 });
+
+export const showGrowing = () => ({
+  type: actions.SHOW_GROWING,
+});

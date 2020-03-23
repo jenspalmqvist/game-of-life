@@ -13,22 +13,16 @@ enum CellStatus {
 type CellProps = {
   id: string;
   cellStatus: CellStatus;
+  color: string;
 };
 
 export const StyledCell = styled.button<CellProps>`
-  background-color: ${props =>
-    props.cellStatus === CellStatus.Alive
-      ? `violet`
-      : props.cellStatus === CellStatus.Growing
-      ? `pink`
-      : props.cellStatus === CellStatus.Dying
-      ? 'brown'
-      : 'light-grey'};
+  background-color: ${props => props.color};
   flex-grow: 1;
   border: 1px solid lightgrey;
 `;
 
-const Cell = ({ id, cellStatus }: CellProps) => {
+const Cell = ({ id, cellStatus, color }: CellProps) => {
   const dispatch = useDispatch();
   const switchState = () => {
     switch (cellStatus) {
@@ -38,12 +32,18 @@ const Cell = ({ id, cellStatus }: CellProps) => {
       case CellStatus.Dead:
         status = CellStatus.Alive;
         break;
+      case CellStatus.Growing:
+        status = CellStatus.Growing;
+        break;
+      case CellStatus.Dying:
+        status = CellStatus.Dying;
+        break;
       default:
         return cellStatus;
     }
   };
   let status = cellStatus;
-  return <StyledCell id={id} cellStatus={status} onClick={() => dispatch(actions.updateCell(id))} />;
+  return <StyledCell id={id} cellStatus={status} onClick={() => dispatch(actions.updateCell(id))} color={color} />;
 };
 
 export default Cell;

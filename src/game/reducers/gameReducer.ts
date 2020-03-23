@@ -14,23 +14,31 @@ const setInitialGrid = (state: any) => {
     }
     aliveCells += grid[row].reduce((a, b) => a + b);
   }
+  aliveCells = (aliveCells / (gridSize * gridSize)) * 100;
   const newGrid = setGrowingOrDying(grid);
   return { ...state, grid: newGrid, aliveCells };
 };
 
 const setGrowingOrDying = (grid: number[][]) => {
+  const oldGrid: number[][] = grid.map(row => row.slice());
   const newGrid: number[][] = grid.map(row => row.slice());
   for (let row = 0; row < grid.length; row++) {
     for (let cell = 0; cell < grid.length; cell++) {
-      const aliveNeighbours = calculateNeighbours(grid, row, cell);
+      const aliveNeighbours = calculateNeighbours(oldGrid, row, cell);
       switch (grid[row][cell]) {
         case 0:
-          aliveNeighbours === 3 ? (newGrid[row][cell] = 2) : (newGrid[row][cell] = grid[row][cell]);
+          aliveNeighbours === 3 ? (newGrid[row][cell] = 2) : (newGrid[row][cell] = oldGrid[row][cell]);
           break;
         case 1:
           aliveNeighbours < 2 || aliveNeighbours > 3
             ? (newGrid[row][cell] = 3)
-            : (newGrid[row][cell] = grid[row][cell]);
+            : (newGrid[row][cell] = oldGrid[row][cell]);
+          break;
+        case 2:
+          newGrid[row][cell] = 1;
+          break;
+        case 3:
+          newGrid[row][cell] = 0;
           break;
         default:
           throw new Error('what happened?');
@@ -64,12 +72,14 @@ const nextGeneration = (state: any) => {
       const aliveNeighbours = calculateNeighbours(oldGrid, row, cell);
       switch (oldGrid[row][cell]) {
         case 0:
-          aliveNeighbours === 3 ? (newGrid[row][cell] = 1) : (newGrid[row][cell] = oldGrid[row][cell]);
+          // aliveNeighbours === 3 ? (newGrid[row][cell] = 1) : (newGrid[row][cell] = oldGrid[row][cell]);
+          newGrid[row][cell] = oldGrid[row][cell];
           break;
         case 1:
-          aliveNeighbours < 2 || aliveNeighbours > 3
-            ? (newGrid[row][cell] = 0)
-            : (newGrid[row][cell] = oldGrid[row][cell]);
+          // aliveNeighbours < 2 || aliveNeighbours > 3
+          //   ? (newGrid[row][cell] = 0)
+          //   : (newGrid[row][cell] = oldGrid[row][cell]);
+          newGrid[row][cell] = oldGrid[row][cell];
           break;
         case 2:
           newGrid[row][cell] = 1;
@@ -83,7 +93,8 @@ const nextGeneration = (state: any) => {
     }
   }
   newGrid = setGrowingOrDying(newGrid);
-  const aliveCells = newGrid.flat().reduce((a, b) => a + b);
+  let aliveCells = newGrid.flat().reduce((a, b) => (b === 1 ? a + 1 : a + 0));
+  aliveCells = (aliveCells / (newGrid.length * newGrid.length)) * 100;
   return { ...state, grid: newGrid, generations: previousGenerations, aliveCells, numberOfGenerations };
 };
 
@@ -92,17 +103,17 @@ const calculateNeighbours = (oldGrid: number[][], row: number, cell: number) => 
   const nextRow = row === oldGrid.length - 1 ? 0 : row + 1;
   const previousCell = cell === 0 ? oldGrid.length - 1 : cell - 1;
   const nextCell = cell === oldGrid.length - 1 ? 0 : cell + 1;
-
-  return (
-    oldGrid[previousRow][cell] +
-    oldGrid[previousRow][nextCell] +
-    oldGrid[previousRow][previousCell] +
-    oldGrid[row][previousCell] +
-    oldGrid[row][nextCell] +
-    oldGrid[nextRow][cell] +
-    oldGrid[nextRow][nextCell] +
-    oldGrid[nextRow][previousCell]
-  );
+  const neighbourCells: number[] = [
+    oldGrid[previousRow][cell],
+    oldGrid[previousRow][nextCell],
+    oldGrid[previousRow][previousCell],
+    oldGrid[row][previousCell],
+    oldGrid[row][nextCell],
+    oldGrid[nextRow][cell],
+    oldGrid[nextRow][nextCell],
+    oldGrid[nextRow][previousCell],
+  ];
+  return neighbourCells.reduce((a, b) => (b === 1 || b === 2 ? a + 1 : a + 0));
 };
 const gameReducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -113,7 +124,7 @@ const gameReducer = (state = initialState, action: any) => {
     case types.START_GAME:
       return nextGeneration(state);
     default:
-      return initialState;
+      return state;
   }
 };
 

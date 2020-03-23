@@ -23,7 +23,7 @@ const GridRow = styled.div`
 
 let cellId = 0;
 
-const renderGrid = (grid: number[][]) => {
+const renderGrid = (grid: number[][], aliveCells: number) => {
   return grid.map((row: number[]) => (
     <GridRow key={grid.indexOf(row)}>
       {row.map((cell: number) => {
@@ -43,6 +43,15 @@ const renderGrid = (grid: number[][]) => {
                 ? CellStatus.Growing
                 : CellStatus.Dying
             }
+            color={
+              cell === 0
+                ? 'eggshell'
+                : cell === 1
+                ? `rgb(255,${50 + aliveCells * 4},${50 + aliveCells * 4})`
+                : cell === 2
+                ? `rgb(255,${100 + aliveCells * 3},${100 + aliveCells * 3})`
+                : 'brown'
+            }
           />
         );
       })}
@@ -53,7 +62,7 @@ const renderGrid = (grid: number[][]) => {
 export const Game = () => {
   const dispatch = useDispatch();
   const grid = useSelector((state: any) => state.game.grid);
-  console.log(grid);
+  const aliveCells = useSelector((state: any) => state.game.aliveCells);
   useEffect(() => {
     if (grid.length === 1) {
       dispatch(actions.getInitialGrid());
@@ -61,8 +70,9 @@ export const Game = () => {
   }, [grid]);
   return (
     <GameBoard>
-      {renderGrid(grid)}
+      {renderGrid(grid, aliveCells)}
       <button onClick={() => dispatch(actions.startGame())}>Next generation</button>
+      <button onClick={() => dispatch(actions.showGrowing())}>Show growing or dying</button>
     </GameBoard>
   );
 };
