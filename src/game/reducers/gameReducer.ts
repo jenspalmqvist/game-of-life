@@ -1,6 +1,13 @@
 import * as types from '../actions/gameActionTypes';
 
-const initialState = { generations: [], grid: [[]], aliveCells: 0, numberOfGenerations: 0, currentGeneration: 0 };
+const initialState = {
+  generations: [],
+  grid: [[]],
+  aliveCells: 0,
+  numberOfGenerations: 0,
+  currentGeneration: 0,
+  gameOver: false,
+};
 
 const changeCurrentGrid = (state: any, action: any) => {
   try {
@@ -67,11 +74,6 @@ const updateCell = (state: any, id: string) => {
   const row: number = Number(id.split(',')[0]);
   const cell: number = Number(id.split(',')[1]);
   const clonedGrid: number[][] = [...state.grid];
-  // const clonedRow = clonedGrid[row];
-  // let clonedCell = clonedRow[cell];
-  // clonedCell === 1 ? (clonedCell = 0) : (clonedCell = 1);
-  // console.log(clonedCell);
-  // clonedRow[cell] = clonedCell;
   clonedGrid[row][cell] === 1 ? (clonedGrid[row][cell] = 0) : (clonedGrid[row][cell] = 1);
   return { ...state, grid: clonedGrid };
 };
@@ -94,7 +96,6 @@ const nextGeneration = (state: any) => {
     }
     for (let row = 0; row < oldGrid.length; row++) {
       for (let cell = 0; cell < oldGrid.length; cell++) {
-        const aliveNeighbours = calculateNeighbours(oldGrid, row, cell);
         switch (oldGrid[row][cell]) {
           case 0:
             newGrid[row][cell] = oldGrid[row][cell];
@@ -117,6 +118,17 @@ const nextGeneration = (state: any) => {
     let aliveCells = newGrid.flat().reduce((a, b) => (b === 1 ? a + 1 : a + 0));
     aliveCells = (aliveCells / (newGrid.length * newGrid.length)) * 100;
     aliveCells = aliveCells > 15 ? 15 : aliveCells;
+    if (aliveCells === 0) {
+      return {
+        ...state,
+        grid: newGrid,
+        generations: previousGenerations,
+        aliveCells,
+        numberOfGenerations,
+        currentGeneration,
+        gameOver: true,
+      };
+    }
     return {
       ...state,
       grid: newGrid,

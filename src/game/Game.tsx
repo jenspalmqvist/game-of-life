@@ -74,12 +74,13 @@ export const Game = () => {
   const aliveCells = useSelector((state: any) => state.game.aliveCells);
   const currentGeneration = useSelector((state: any) => state.game.currentGeneration);
   const numberOfGenerations = useSelector((state: any) => state.game.numberOfGenerations);
+  // const gameOver = useSelector((state: any) => state.game.gameOver);
   const [isRunning, setIsRunning] = useState(false);
   useEffect(() => {
     if (grid.length === 1) {
       dispatch(actions.getInitialGrid());
     }
-    setTimeout(() => isRunning === true && dispatch(actions.startGame()), 200);
+    isRunning === true && setTimeout(() => dispatch(actions.startGame()), 100);
   }, [grid]);
   return (
     <GameWrapper>
