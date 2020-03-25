@@ -30,19 +30,15 @@ const ButtonWrapper = styled.div`
   align: center;
   display: flex;
 `;
-let cellId = 0;
 
 const renderGrid = (grid: number[][], aliveCells: number) => {
-  return grid.map((row: number[]) => (
-    <GridRow key={grid.indexOf(row)}>
-      {row.map((cell: number) => {
-        if (cellId >= grid.length) {
-          cellId = 0;
-        }
+  return grid.map((row: number[], rowIndex: number) => (
+    <GridRow key={rowIndex}>
+      {row.map((cell: number, cellId: number) => {
         return (
           <Cell
-            id={`${grid.indexOf(row)},${cellId++}`}
-            key={`${grid.indexOf(row)},${cellId}`}
+            id={`${rowIndex},${cellId}`}
+            key={`${rowIndex},${cellId}`}
             cellStatus={
               cell === 0
                 ? CellStatus.Dead

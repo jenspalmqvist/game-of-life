@@ -77,22 +77,6 @@ const nextGeneration = (state: any) => {
     const numberOfGenerations = state.numberOfGenerations + 1;
     const currentGeneration = state.currentGeneration + 1;
     const previousGenerations = state.generations.slice();
-    // const newGrid: number[][] = state.grid.map((row: number[], rowIndex: number) =>
-    //   row.map((cell: number, cellIndex) => {
-    //     switch (cell) {
-    //       case 0:
-    //         return 0;
-    //       case 1:
-    //         return 1;
-    //       case 2:
-    //         return 1;
-    //       case 3:
-    //         return 0;
-    //       default:
-    //         throw new Error('what happened?');
-    //     }
-    //   })
-    // );
     const newGrid = setGrowingOrDying(state.grid);
     if (previousGenerations.length > 200) {
       previousGenerations.shift();
